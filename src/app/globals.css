@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-modal-slide-in {
+  animation: modalSlideIn 0.2s ease-out forwards;
+}
+
+:root {
+  --foreground-rgb: 235, 240, 236;
+  --background-rgb: 65, 65, 110;
+  --subtitle-rgb: 195, 199, 196;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+h1 {
+  color: rgb(var(--foreground-rgb));
+}
+
+h2, h3, h4, h5, h6 {
+  color: rgb(var(--subtitle-rgb));
+}
