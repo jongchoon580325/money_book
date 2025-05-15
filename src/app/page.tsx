@@ -68,7 +68,8 @@ export default function Home() {
         <div className="grid grid-cols-12 gap-6">
           {/* Left Section - Hero + Login */}
           <div className="col-span-12 lg:col-span-5 flex flex-col h-full justify-between space-y-6">
-              <div className="text-left">
+              {/* 타이틀/부연설명: 모바일에서는 숨김 */}
+              <div className="text-left hidden sm:block">
                 <h1 className="text-4xl lg:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600">
                   Smart 가계부
                 </h1>
@@ -79,9 +80,9 @@ export default function Home() {
                   당신의 재정을 스마트하게 관리하고 미래를 계획하세요. 더 효율적인 자산 관리를 통해 재정적 자유를 경험하세요.
                 </p>
               </div>
-              {/* Security Section */}
+              {/* Security Section: 모바일에서도 항상 보임 */}
             {!isLoggedIn ? (
-              <div className="bg-gray-800/30 backdrop-blur-sm rounded-2xl p-6 border border-gray-700">
+              <div className="bg-gray-800/30 backdrop-blur-sm rounded-2xl p-6 border border-gray-700 mx-auto w-full max-w-md">
                 <div className="flex items-center gap-3 mb-4">
                   <RiShieldKeyholeLine className="text-3xl text-blue-500" />
                   <h2 className="text-xl font-semibold">보안 접속</h2>
@@ -131,8 +132,8 @@ export default function Home() {
             </div>
             )}
           </div>
-          {/* Right Section - Features Grid */}
-          <div className="col-span-12 lg:col-span-7">
+          {/* Right Section - Features Grid: 모바일에서는 숨김 */}
+          <div className="col-span-12 lg:col-span-7 hidden sm:block">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
               {/* 지출 관리 */}
               <Link href="/transaction/input" className="group flex">

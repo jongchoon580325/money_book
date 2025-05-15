@@ -3,12 +3,14 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import { FaWallet, FaChartLine, FaCalendarAlt, FaBook } from 'react-icons/fa';
 
 export default function Navbar() {
   const [mounted, setMounted] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const [hoveredMenu, setHoveredMenu] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -43,36 +45,92 @@ export default function Navbar() {
           {/* Left: Logo */}
           <div className="flex items-center min-w-[180px]">
             <Link href="/transaction/input" className="text-2xl font-extrabold tracking-tight text-[#41416e] hover:text-orange-500 transition-colors duration-200">
-              SMART 가계부
+              <span className="hidden sm:inline">SMART 가계부</span>
             </Link>
           </div>
           {/* Center: Main Menu + Christian Asset Management */}
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-10">
             <div className="flex space-x-8">
-            <Link 
-              href="/transaction/input" 
-              className={getLinkClassName('/transaction/input')}
-            >
-              거래입력
-            </Link>
-            <Link 
-              href="/transaction/statistics" 
-              className={getLinkClassName('/transaction/statistics')}
-            >
-              거래통계
-            </Link>
-            <Link 
-              href="/settings" 
-              className={getLinkClassName('/settings')}
-            >
-              거래설정
-            </Link>
-          </div>
-            <Link 
-              href="/bible" 
-              className={`text-lg font-bold px-4 py-1 rounded transition-colors duration-200 ${pathname === '/bible' ? 'text-orange-500 bg-white/60' : 'text-[#41416e]/90 hover:text-orange-500 hover:bg-white/40'}`}
-            >
-              크리스챤 자산관리
+              <Link href="/transaction/input" className={getLinkClassName('/transaction/input')}>
+                <span
+                  className="inline md:hidden text-2xl align-middle relative"
+                  onMouseEnter={() => setHoveredMenu('input')}
+                  onMouseLeave={() => setHoveredMenu(null)}
+                  onTouchStart={() => setHoveredMenu('input')}
+                  onTouchEnd={() => setHoveredMenu(null)}
+                  onFocus={() => setHoveredMenu('input')}
+                  onBlur={() => setHoveredMenu(null)}
+                  tabIndex={0}
+                >
+                  <FaWallet />
+                  {hoveredMenu === 'input' && (
+                    <span className="md:hidden block absolute left-1/2 -translate-x-1/2 top-full mt-2 bg-black/80 text-white text-xs rounded px-2 py-1 z-50 whitespace-nowrap">
+                      거래입력
+                    </span>
+                  )}
+                </span>
+                <span className="hidden md:inline">거래입력</span>
+              </Link>
+              <Link href="/transaction/statistics" className={getLinkClassName('/transaction/statistics')}>
+                <span
+                  className="inline md:hidden text-2xl align-middle relative"
+                  onMouseEnter={() => setHoveredMenu('statistics')}
+                  onMouseLeave={() => setHoveredMenu(null)}
+                  onTouchStart={() => setHoveredMenu('statistics')}
+                  onTouchEnd={() => setHoveredMenu(null)}
+                  onFocus={() => setHoveredMenu('statistics')}
+                  onBlur={() => setHoveredMenu(null)}
+                  tabIndex={0}
+                >
+                  <FaChartLine />
+                  {hoveredMenu === 'statistics' && (
+                    <span className="md:hidden block absolute left-1/2 -translate-x-1/2 top-full mt-2 bg-black/80 text-white text-xs rounded px-2 py-1 z-50 whitespace-nowrap">
+                      거래통계
+                    </span>
+                  )}
+                </span>
+                <span className="hidden md:inline">거래통계</span>
+              </Link>
+              <Link href="/settings" className={getLinkClassName('/settings')}>
+                <span
+                  className="inline md:hidden text-2xl align-middle relative"
+                  onMouseEnter={() => setHoveredMenu('settings')}
+                  onMouseLeave={() => setHoveredMenu(null)}
+                  onTouchStart={() => setHoveredMenu('settings')}
+                  onTouchEnd={() => setHoveredMenu(null)}
+                  onFocus={() => setHoveredMenu('settings')}
+                  onBlur={() => setHoveredMenu(null)}
+                  tabIndex={0}
+                >
+                  <FaCalendarAlt />
+                  {hoveredMenu === 'settings' && (
+                    <span className="md:hidden block absolute left-1/2 -translate-x-1/2 top-full mt-2 bg-black/80 text-white text-xs rounded px-2 py-1 z-50 whitespace-nowrap">
+                      거래설정
+                    </span>
+                  )}
+                </span>
+                <span className="hidden md:inline">거래설정</span>
+              </Link>
+            </div>
+            <Link href="/bible" className={`text-lg font-bold px-4 py-1 rounded transition-colors duration-200 ${pathname === '/bible' ? 'text-orange-500 bg-white/60' : 'text-[#41416e]/90 hover:text-orange-500 hover:bg-white/40'}`}>
+              <span
+                className="inline md:hidden text-2xl align-middle relative"
+                onMouseEnter={() => setHoveredMenu('bible')}
+                onMouseLeave={() => setHoveredMenu(null)}
+                onTouchStart={() => setHoveredMenu('bible')}
+                onTouchEnd={() => setHoveredMenu(null)}
+                onFocus={() => setHoveredMenu('bible')}
+                onBlur={() => setHoveredMenu(null)}
+                tabIndex={0}
+              >
+                <FaBook />
+                {hoveredMenu === 'bible' && (
+                  <span className="md:hidden block absolute left-1/2 -translate-x-1/2 top-full mt-2 bg-black/80 text-white text-xs rounded px-2 py-1 z-50 whitespace-nowrap">
+                    크리스챤 자산관리
+                  </span>
+                )}
+              </span>
+              <span className="hidden md:inline">크리스챤 자산관리</span>
             </Link>
           </div>
           {/* Right: Login/Logout */}
@@ -83,7 +141,7 @@ export default function Navbar() {
                 onClick={handleLogout}
               >
                 로그아웃
-          </button>
+              </button>
             ) : (
               <Link 
                 href="/" 
