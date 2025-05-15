@@ -77,7 +77,7 @@ export default function Home() {
                   Financial Management System
                 </p>
                 <p className="text-base lg:text-lg text-gray-400">
-                  당신의 재정을 스마트하게 관리하고 미래를 계획하세요. 더 효율적인 자산 관리를 통해 재정적 자유를 경험하세요.
+                  선한 청지기로서 맡겨 주신 재정을 잘 관리하고 다스리며 선하게 사용할 뿐입니다.
                 </p>
               </div>
               {/* Security Section: 모바일에서도 항상 보임 */}

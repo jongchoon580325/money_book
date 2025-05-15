@@ -145,6 +145,25 @@ export const exportToCSV = (data: any[], filename: string, isCategory: boolean =
             if (koreanHeader) {
               if (key === 'type') {
                 transformed[koreanHeader] = value === 'income' ? '수입' : '지출';
+              } else if (key === 'date' && !isCategory) {
+                // yyyy-mm-dd, dd/mm/yyyy 등 다양한 날짜를 yyyy.mm.dd로 변환
+                let dateStr = value?.toString() || '';
+                let yyyy = '', mm = '', dd = '';
+                if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+                  // yyyy-mm-dd
+                  [yyyy, mm, dd] = dateStr.split('-');
+                } else if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateStr)) {
+                  // dd/mm/yyyy
+                  [dd, mm, yyyy] = dateStr.split('/');
+                } else if (/^\d{4}\.\d{2}\.\d{2}\.?$/.test(dateStr)) {
+                  // yyyy.mm.dd or yyyy.mm.dd.
+                  [yyyy, mm, dd] = dateStr.replace(/\.$/, '').split('.');
+                }
+                if (yyyy && mm && dd) {
+                  transformed[koreanHeader] = `${yyyy}.${mm}.${dd}`;
+                } else {
+                  transformed[koreanHeader] = dateStr;
+                }
               } else {
                 transformed[koreanHeader] = value?.toString() || '';
               }
