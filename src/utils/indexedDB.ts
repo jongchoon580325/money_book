@@ -353,10 +353,10 @@ class CategoryDB {
             reject(new Error(`Transaction failed: ${error?.message || 'Unknown error'}`));
           };
 
-          // 기존 데이터 모두 삭제
-          store.clear().onsuccess = () => {
+          // 기존 데이터 모두 삭제 (clear) 후, 완료되면 추가
+          const clearRequest = store.clear();
+          clearRequest.onsuccess = () => {
             console.log('Successfully cleared existing categories');
-            
             // 정렬된 순서로 추가
             const sortedCategories = categories
               .map((category) => ({
@@ -383,12 +383,17 @@ class CategoryDB {
                 return (a.subcategory || '').localeCompare(b.subcategory || '');
               });
 
-            // order 값 부여
-            sortedCategories.forEach((category, index) => {
-              store.add({ ...category, order: index });
-            });
+            // order 값 부여 및 동기적으로 add
+            for (let index = 0; index < sortedCategories.length; index++) {
+              store.add({ ...sortedCategories[index], order: index });
+            }
 
             console.log(`Added ${sortedCategories.length} categories for import`);
+          };
+          clearRequest.onerror = (event) => {
+            const error = (event.target as IDBRequest).error;
+            console.error('Failed to clear categories:', error?.message || event);
+            reject(new Error(`Failed to clear categories: ${error?.message || 'Unknown error'}`));
           };
         } catch (error) {
           console.error('Error in transaction:', error);
