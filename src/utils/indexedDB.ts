@@ -414,11 +414,19 @@ class CategoryDB {
   }
 
   private async ensureConnection(): Promise<void> {
-    if (!this.db || !this.isInitialized) {
-      await this.connect();
-    } else if (this.connecting) {
-      await this.connecting;
+    // 이미 연결되어 있고, 닫혀있지 않으면 OK
+    if (
+      this.db &&
+      this.isInitialized &&
+      // 최신 브라우저는 closed 프로퍼티 지원
+      (typeof (this.db as any).closed === 'undefined' || !(this.db as any).closed)
+    ) {
+      return;
     }
+    // 연결이 닫혔거나 유효하지 않으면 재연결
+    this.db = null;
+    this.isInitialized = false;
+    await this.connect();
   }
 }
 
@@ -730,11 +738,19 @@ class TransactionDB {
   }
 
   private async ensureConnection(): Promise<void> {
-    if (!this.db || !this.isInitialized) {
-      await this.connect();
-    } else if (this.connecting) {
-      await this.connecting;
+    // 이미 연결되어 있고, 닫혀있지 않으면 OK
+    if (
+      this.db &&
+      this.isInitialized &&
+      // 최신 브라우저는 closed 프로퍼티 지원
+      (typeof (this.db as any).closed === 'undefined' || !(this.db as any).closed)
+    ) {
+      return;
     }
+    // 연결이 닫혔거나 유효하지 않으면 재연결
+    this.db = null;
+    this.isInitialized = false;
+    await this.connect();
   }
 }
 

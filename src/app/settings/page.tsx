@@ -105,6 +105,11 @@ export default function SettingsPage() {
           }))
         : []; // 빈 배열 전달
 
+      // 데이터가 없으면 안내 메시지 추가
+      if (transactions.length === 0) {
+        showToast('내보낼 데이터가 없습니다. 빈 파일이 생성됩니다.', 'success');
+      }
+
       // CSV 파일 생성 및 다운로드
       exportToCSV(exportData, filename, false);
       showToast('거래내역을 성공적으로 내보냈습니다.', 'success');
@@ -159,6 +164,10 @@ export default function SettingsPage() {
       const categories = await categoryDB.getAllCategories();
       const dateStr = formatDateForFilename();
       const filename = `${dateStr}-카테고리_내보내기.csv`;
+      // 데이터가 없으면 안내 메시지 추가
+      if (categories.length === 0) {
+        showToast('내보낼 데이터가 없습니다. 빈 파일이 생성됩니다.', 'success');
+      }
       exportToCSV(categories, filename, true);
       showToast('카테고리를 성공적으로 내보냈습니다.', 'success');
     } catch (error) {

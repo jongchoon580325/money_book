@@ -45,7 +45,7 @@ next-env.d.ts
 # macOS & system files
 .AppleDouble
 .LSOverride
-Icon?
+-public/Icon?
 ._*
 .Spotlight-V100
 .Trashes
