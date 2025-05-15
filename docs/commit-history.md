@@ -2,6 +2,16 @@
 
 ### 2025-05-15
 
+22. **기능: favicon(가계부_icon.ico) 글로벌 적용 (head.tsx)** (62fd60d)
+    - 글로벌 favicon 적용
+      - public/가계부_icon.ico, 가계부_icon.png 추가
+      - src/app/head.tsx에서 favicon 등록
+      - 모든 환경에서 탭 아이콘 정상 노출
+    - DB_VERSION을 99로 임시 증가(강제 마이그레이션)
+    - object store 누락 시 1회만 deleteDatabase 후 재시도, 2회 이상은 안내만(무한루프 방지)
+    - DB 구조 오류 발생 시 사용자에게 안내 메시지 출력
+    - 모바일/태블릿 환경에서의 DB 구조 오류 무한 새로고침 문제 해결
+
 21. **수정: IndexedDB 연결 안정화 및 내보내기 UX 개선** (8cd383f)
     - IndexedDB 연결 안정성 강화
       - DB 연결이 닫힌 경우 자동 재연결 로직 추가
