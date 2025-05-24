@@ -255,7 +255,8 @@ export const validateTransactionData = (data: any[]): boolean => {
 
 // 카테고리 데이터 유효성 검사
 export const validateCategoryData = (data: any[]): boolean => {
-  if (!data || data.length === 0) return false;
+  if (!Array.isArray(data)) return false;
+  if (data.length === 0) return true;
 
   return data.every(item => {
     // 필수 필드 존재 여부 확인

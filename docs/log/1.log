@@ -1,0 +1,35 @@
+react-dom.development.js:36606 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+hot-reloader-client.js:151 [Fast Refresh] rebuilding
+app-index.js:32 Failed to load categories: NotFoundError: Failed to execute 'transaction' on 'IDBDatabase': One of the specified object stores was not found.
+    at eval (indexedDB.ts:296:37)
+    at new Promise (<anonymous>)
+    at CategoryDB.getAllCategories (indexedDB.ts:290:14)
+    at async loadCategories (CategoryTabs.tsx:14:29)
+window.console.error @ app-index.js:32
+hot-reloader-client.js:151 [Fast Refresh] rebuilding
+indexedDB.ts:296 Uncaught (in promise) NotFoundError: Failed to execute 'transaction' on 'IDBDatabase': One of the specified object stores was not found.
+    at eval (indexedDB.ts:296:37)
+    at new Promise (<anonymous>)
+    at CategoryDB.getAllCategories (indexedDB.ts:290:14)
+    at async getCategoriesByType (categoryUtils.ts:11:22)
+    at async loadCategories (TransactionForm.tsx:30:28)
+indexedDB.ts:296 Uncaught (in promise) NotFoundError: Failed to execute 'transaction' on 'IDBDatabase': One of the specified object stores was not found.
+    at eval (indexedDB.ts:296:37)
+    at new Promise (<anonymous>)
+    at CategoryDB.getAllCategories (indexedDB.ts:290:14)
+    at async getCategoriesByType (categoryUtils.ts:11:22)
+    at async loadCategories (TransactionForm.tsx:30:28)
+app-index.js:32 Failed to load categories: NotFoundError: Failed to execute 'transaction' on 'IDBDatabase': One of the specified object stores was not found.
+    at eval (indexedDB.ts:296:37)
+    at new Promise (<anonymous>)
+    at CategoryDB.getAllCategories (indexedDB.ts:290:14)
+    at async loadCategories (CategoryTabs.tsx:14:29)
+window.console.error @ app-index.js:32
+app-index.js:32 카테고리 가져오기 실패: NotFoundError: Failed to execute 'transaction' on 'IDBDatabase': One of the specified object stores was not found.
+    at eval (indexedDB.ts:165:38)
+    at new Promise (<anonymous>)
+    at CategoryDB.addCategory (indexedDB.ts:164:14)
+    at async input.onchange (page.tsx:148:11)
+window.console.error @ app-index.js:32
+hot-reloader-client.js:151 [Fast Refresh] rebuilding
+settings:1 The resource http://localhost:3000/_next/static/css/app/layout.css?v=1748081511375 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.

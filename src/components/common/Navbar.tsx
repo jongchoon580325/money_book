@@ -65,12 +65,12 @@ export default function Navbar() {
                   <FaWallet />
                   {hoveredMenu === 'input' && (
                     <span className="md:hidden block absolute left-1/2 -translate-x-1/2 top-full mt-2 bg-black/80 text-white text-xs rounded px-2 py-1 z-50 whitespace-nowrap">
-                      거래입력
+              거래입력
                     </span>
                   )}
                 </span>
                 <span className="hidden md:inline">거래입력</span>
-              </Link>
+            </Link>
               <Link href="/transaction/statistics" className={getLinkClassName('/transaction/statistics')}>
                 <span
                   className="inline md:hidden text-2xl align-middle relative"
@@ -85,12 +85,12 @@ export default function Navbar() {
                   <FaChartLine />
                   {hoveredMenu === 'statistics' && (
                     <span className="md:hidden block absolute left-1/2 -translate-x-1/2 top-full mt-2 bg-black/80 text-white text-xs rounded px-2 py-1 z-50 whitespace-nowrap">
-                      거래통계
+              거래통계
                     </span>
                   )}
                 </span>
                 <span className="hidden md:inline">거래통계</span>
-              </Link>
+            </Link>
               <Link href="/settings" className={getLinkClassName('/settings')}>
                 <span
                   className="inline md:hidden text-2xl align-middle relative"
@@ -105,7 +105,7 @@ export default function Navbar() {
                   <FaCalendarAlt />
                   {hoveredMenu === 'settings' && (
                     <span className="md:hidden block absolute left-1/2 -translate-x-1/2 top-full mt-2 bg-black/80 text-white text-xs rounded px-2 py-1 z-50 whitespace-nowrap">
-                      거래설정
+              거래설정
                     </span>
                   )}
                 </span>
@@ -141,7 +141,7 @@ export default function Navbar() {
                 onClick={handleLogout}
               >
                 로그아웃
-              </button>
+          </button>
             ) : (
               <Link 
                 href="/" 

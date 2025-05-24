@@ -372,9 +372,13 @@ function PeriodFilter({ transactions }: { transactions: Transaction[] }) {
     } else if (period === 'month') {
       const year = now.getFullYear();
       const month = now.getMonth();
+      // 월간: 1일 0시 ~ 오늘 23:59:59
+      const start = new Date(year, month, 1, 0, 0, 0, 0);
+      const end = new Date(now);
+      end.setHours(23,59,59,999);
       result = transactions.filter(tx => {
         const d = new Date(tx.date);
-        return d.getFullYear() === year && d.getMonth() === month;
+        return d >= start && d <= end;
       });
     } else if (period === 'week') {
       const startOfWeek = new Date(now);

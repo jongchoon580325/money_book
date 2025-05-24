@@ -53,5 +53,5 @@ h2, h3, h4, h5, h6 {
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(1);
+  filter: invert(0);
 }
