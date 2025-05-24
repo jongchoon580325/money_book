@@ -133,6 +133,9 @@ function TransactionTabs() {
   const [activeTab, setActiveTab] = useState<'income' | 'expense' | null>('income');
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [hoverRowId, setHoverRowId] = useState<string | null>(null);
+  const [hoverMonth, setHoverMonth] = useState<string | null>(null);
+  const [hoverSum, setHoverSum] = useState<number | null>(null);
+  const [hoverPosition, setHoverPosition] = useState<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -152,6 +155,34 @@ function TransactionTabs() {
 
   const incomePage = usePaginatedData(incomeTxs);
   const expensePage = usePaginatedData(expenseTxs);
+
+  // 월별 합계 툴팁 핸들러
+  const handleRowMouseEnter = (tx: Transaction, type: 'income' | 'expense') => (e: React.MouseEvent) => {
+    setHoverRowId(tx.id);
+    // 날짜에서 월 추출 (yyyy-mm-dd, yyyy.mm.dd, yyyy/mm/dd 등 지원)
+    let dateStr = tx.date.replace(/\./g, '-').replace(/\//g, '-');
+    const d = new Date(dateStr);
+    const year = d.getFullYear();
+    const month = d.getMonth() + 1;
+    const monthStr = `${year}년 ${month.toString().padStart(2, '0')}월`;
+    setHoverMonth(monthStr);
+    // 해당 월의 합계 계산
+    const txs = (type === 'income' ? incomeTxs : expenseTxs).filter(t => {
+      let tDate = t.date.replace(/\./g, '-').replace(/\//g, '-');
+      const td = new Date(tDate);
+      return td.getFullYear() === year && td.getMonth() + 1 === month;
+    });
+    const sum = txs.reduce((sum, t) => sum + (typeof t.amount === 'string' ? parseInt(t.amount.toString().replace(/,/g, '')) : t.amount), 0);
+    setHoverSum(sum);
+    // 마우스 위치 저장
+    setHoverPosition({ x: e.clientX, y: e.clientY });
+  };
+  const handleRowMouseLeave = () => {
+    setHoverRowId(null);
+    setHoverMonth(null);
+    setHoverSum(null);
+    setHoverPosition(null);
+  };
 
   return (
     <section className="mb-10">
@@ -203,8 +234,8 @@ function TransactionTabs() {
                   <tr
                     key={tx.id}
                     className={`border-b border-gray-100 hover:bg-green-50`}
-                    onMouseEnter={() => setHoverRowId(tx.id)}
-                    onMouseLeave={() => setHoverRowId(null)}
+                    onMouseEnter={handleRowMouseEnter(tx, 'income')}
+                    onMouseLeave={handleRowMouseLeave}
                   >
                     <td className={`px-2 py-1 whitespace-nowrap ${hoverRowId === tx.id ? 'text-black' : 'text-white'}`}>{tx.date}</td>
                     <td className={`px-2 py-1 whitespace-nowrap ${hoverRowId === tx.id ? 'text-black' : 'text-white'}`}>{tx.section}</td>
@@ -217,6 +248,7 @@ function TransactionTabs() {
               </tbody>
             </table>
           </div>
+          {/* 페이지네이션 */}
           <div className="flex justify-center items-center gap-2 mt-4">
             <button
               onClick={() => incomePage.setCurrentPage(1)}
@@ -240,6 +272,16 @@ function TransactionTabs() {
               className="px-2 py-1 rounded bg-gray-200 text-xs text-[#2a2b2a] disabled:opacity-50"
             >마지막</button>
           </div>
+          {/* 월별 합계 툴팁 */}
+          {hoverRowId && hoverMonth && hoverSum !== null && hoverPosition && (
+            <div
+              className="fixed z-50 px-4 py-2 rounded-xl shadow-lg bg-white text-black border-2 border-green-400 font-bold text-base animate-fade-in"
+              style={{ left: hoverPosition.x + 16, top: hoverPosition.y - 8, pointerEvents: 'none', minWidth: 180 }}
+            >
+              <div className="text-green-600 text-sm font-semibold mb-1">{hoverMonth} 수입 합계</div>
+              <div className="text-2xl font-bold">₩{hoverSum.toLocaleString()}</div>
+            </div>
+          )}
         </div>
       )}
       {activeTab === 'expense' && (
@@ -274,8 +316,8 @@ function TransactionTabs() {
                   <tr
                     key={tx.id}
                     className={`border-b border-gray-100 hover:bg-red-50`}
-                    onMouseEnter={() => setHoverRowId(tx.id)}
-                    onMouseLeave={() => setHoverRowId(null)}
+                    onMouseEnter={handleRowMouseEnter(tx, 'expense')}
+                    onMouseLeave={handleRowMouseLeave}
                   >
                     <td className={`px-2 py-1 whitespace-nowrap ${hoverRowId === tx.id ? 'text-black' : 'text-white'}`}>{tx.date}</td>
                     <td className={`px-2 py-1 whitespace-nowrap ${hoverRowId === tx.id ? 'text-black' : 'text-white'}`}>{tx.section}</td>
@@ -288,6 +330,7 @@ function TransactionTabs() {
               </tbody>
             </table>
           </div>
+          {/* 페이지네이션 */}
           <div className="flex justify-center items-center gap-2 mt-4">
             <button
               onClick={() => expensePage.setCurrentPage(1)}
@@ -311,6 +354,16 @@ function TransactionTabs() {
               className="px-2 py-1 rounded bg-gray-200 text-xs text-[#2a2b2a] disabled:opacity-50"
             >마지막</button>
           </div>
+          {/* 월별 합계 툴팁 */}
+          {hoverRowId && hoverMonth && hoverSum !== null && hoverPosition && (
+            <div
+              className="fixed z-50 px-4 py-2 rounded-xl shadow-lg bg-white text-black border-2 border-red-400 font-bold text-base animate-fade-in"
+              style={{ left: hoverPosition.x + 16, top: hoverPosition.y - 8, pointerEvents: 'none', minWidth: 180 }}
+            >
+              <div className="text-red-600 text-sm font-semibold mb-1">{hoverMonth} 지출 합계</div>
+              <div className="text-2xl font-bold">₩{hoverSum.toLocaleString()}</div>
+            </div>
+          )}
         </div>
       )}
     </section>
@@ -324,10 +377,11 @@ function CategoryAmountChart({ transactions, type }: { transactions: Transaction
     const summary: Record<string, number> = {};
     transactions.forEach(tx => {
       if (tx.type !== type) return;
-      if (!summary[tx.category]) summary[tx.category] = 0;
-      summary[tx.category] += typeof tx.amount === 'string' ? parseInt(tx.amount.toString().replace(/,/g, '')) : tx.amount;
+      // falsy 값(빈 문자열, null, undefined 등)은 '기타'로 치환
+      const cat = tx.category && tx.category.trim() ? tx.category.trim() : '기타';
+      if (!summary[cat]) summary[cat] = 0;
+      summary[cat] += typeof tx.amount === 'string' ? parseInt(tx.amount.toString().replace(/,/g, '')) : tx.amount;
     });
-    // 내림차순 정렬 후 상위 10개만
     return Object.entries(summary)
       .map(([category, amount]) => ({ category, amount }))
       .sort((a, b) => b.amount - a.amount)
@@ -344,7 +398,7 @@ function CategoryAmountChart({ transactions, type }: { transactions: Transaction
     <ResponsiveContainer width="100%" height={260}>
       <BarChart data={data} layout="vertical" margin={{ top: 10, right: 20, left: 10, bottom: 10 }}>
         <XAxis type="number" hide tick={{ fill: '#222' }} />
-        <YAxis dataKey="category" type="category" tick={{ fill: '#222', fontWeight: 600 }} width={90} />
+        <YAxis dataKey="category" type="category" tick={{ fill: '#fff', fontWeight: 600 }} width={90} />
         <Tooltip formatter={v => `₩${Number(v).toLocaleString()}`} cursor={{ fill: '#e5e7eb', opacity: 0.2 }} />
         <Legend formatter={() => '금액'} />
         <Bar dataKey="amount" fill={barColor} radius={[8, 8, 8, 8]} name="금액">
