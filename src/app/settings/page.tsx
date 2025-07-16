@@ -11,6 +11,7 @@ import { Category } from '@/types/category';
 import { Transaction } from '@/types/transaction';
 import PasswordModal from '@/components/settings/PasswordModal';
 import { useRouter } from 'next/navigation';
+import ConfirmModal from '@/components/common/ConfirmModal';
 
 export default function SettingsPage() {
   const [toast, setToast] = useState({ show: false, message: '', type: '' });
@@ -20,6 +21,7 @@ export default function SettingsPage() {
   const [showPwModal, setShowPwModal] = useState(false);
   const [pwModalMode, setPwModalMode] = useState<'change' | 'reset'>('change');
   const router = useRouter();
+  const [showExportModal, setShowExportModal] = useState<'transaction' | 'category' | null>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && localStorage.getItem('isLoggedIn') !== 'true') {
@@ -84,15 +86,16 @@ export default function SettingsPage() {
   };
 
   const handleExportTransactions = async () => {
+    setShowExportModal('transaction');
+  };
+
+  const handleExportCategories = async () => {
+    setShowExportModal('category');
+  };
+
+  const doExportTransactions = async () => {
     try {
-      // IndexedDB에서 모든 거래내역 가져오기
       const transactions = await transactionDB.getAllTransactions();
-      
-      // 파일명 생성
-      const dateStr = formatDateForFilename();
-      const filename = `${dateStr}-거래내역_내보내기.csv`;
-      
-      // 거래내역이 없는 경우에도 빈 데이터로 CSV 생성
       const exportData = transactions.length > 0 
         ? transactions.map(transaction => ({
             date: transaction.date || '',
@@ -103,21 +106,37 @@ export default function SettingsPage() {
             amount: typeof transaction.amount === 'number' ? transaction.amount : 0,
             memo: transaction.memo || ''
           }))
-        : []; // 빈 배열 전달
-
-      // 데이터가 없으면 안내 메시지 추가
+        : [];
+      const dateStr = formatDateForFilename();
+      const filename = `${dateStr}-거래내역_내보내기.csv`;
       if (transactions.length === 0) {
         showToast('내보낼 데이터가 없습니다. 빈 파일이 생성됩니다.', 'success');
       }
-
-      // CSV 파일 생성 및 다운로드
       exportToCSV(exportData, filename, false);
       showToast('거래내역을 성공적으로 내보냈습니다.', 'success');
-      
     } catch (error) {
       console.error('거래내역 내보내기 실패:', error);
       showToast('거래내역 내보내기에 실패했습니다.', 'error');
     }
+    setShowExportModal(null);
+  };
+
+  const doExportCategories = async () => {
+    try {
+      const categories = await categoryDB.getAllCategories();
+      const exportCategories = categories.map(({ type, section, category, subcategory }) => ({ type, section, category, subcategory }));
+      const dateStr = formatDateForFilename();
+      const filename = `${dateStr}-카테고리_내보내기.csv`;
+      if (categories.length === 0) {
+        showToast('내보낼 데이터가 없습니다. 빈 파일이 생성됩니다.', 'success');
+      }
+      exportToCSV(exportCategories, filename, true);
+      showToast('카테고리를 성공적으로 내보냈습니다.', 'success');
+    } catch (error) {
+      console.error('카테고리 내보내기 실패:', error);
+      showToast('카테고리 내보내기에 실패했습니다.', 'error');
+    }
+    setShowExportModal(null);
   };
 
   const handleImportCategories = async () => {
@@ -143,7 +162,7 @@ export default function SettingsPage() {
             section: item.section,
             category: item.category,
             subcategory: item.subcategory || '',
-            order: parseInt(item.order) || 0
+            order: item.order !== undefined ? parseInt(item.order) || 0 : 0
           };
           await categoryDB.addCategory(category);
         }
@@ -157,23 +176,6 @@ export default function SettingsPage() {
       }
     };
     input.click();
-  };
-
-  const handleExportCategories = async () => {
-    try {
-      const categories = await categoryDB.getAllCategories();
-      const dateStr = formatDateForFilename();
-      const filename = `${dateStr}-카테고리_내보내기.csv`;
-      // 데이터가 없으면 안내 메시지 추가
-      if (categories.length === 0) {
-        showToast('내보낼 데이터가 없습니다. 빈 파일이 생성됩니다.', 'success');
-      }
-      exportToCSV(categories, filename, true);
-      showToast('카테고리를 성공적으로 내보냈습니다.', 'success');
-    } catch (error) {
-      console.error('카테고리 내보내기 실패:', error);
-      showToast('카테고리 내보내기에 실패했습니다.', 'error');
-    }
   };
 
   // 위로가기 버튼 핸들러
@@ -353,6 +355,18 @@ export default function SettingsPage() {
           showToast(pw === '0411' ? '비밀번호가 초기화되었습니다.' : '비밀번호가 변경되었습니다.', 'success');
         }}
       />
+      {showExportModal && (
+        <ConfirmModal
+          isOpen={!!showExportModal}
+          title={showExportModal === 'transaction' ? '거래내역 내보내기' : '카테고리 내보내기'}
+          message={showExportModal === 'transaction' ? '정말 거래내역을 내보내시겠습니까?' : '정말 카테고리를 내보내시겠습니까?'}
+          onConfirm={async () => {
+            if (showExportModal === 'transaction') await doExportTransactions();
+            else await doExportCategories();
+          }}
+          onClose={() => setShowExportModal(null)}
+        />
+      )}
     </div>
   );
 } 

@@ -40,7 +40,29 @@ class CategoryDB {
     }
 
     if (this.db && this.isInitialized) {
-      return Promise.resolve();
+      // object store가 삭제된 경우 강제 재생성
+      if (!this.db.objectStoreNames.contains(this.storeName)) {
+        this.db.close();
+        this.isInitialized = false;
+        this.db = null;
+        // 버전 강제 증가
+        const newVersion = this.version + 1;
+        const request = indexedDB.open(this.dbName, newVersion);
+        request.onupgradeneeded = async (event: IDBVersionChangeEvent) => {
+          const db = (event.target as IDBOpenDBRequest).result;
+          if (!db.objectStoreNames.contains(this.storeName)) {
+            db.createObjectStore(this.storeName, { keyPath: 'id' });
+          }
+        };
+        await new Promise((resolve, reject) => {
+          request.onsuccess = () => resolve(undefined);
+          request.onerror = () => reject(request.error);
+        });
+        this.isInitialized = false;
+        this.db = null;
+      } else {
+        return Promise.resolve();
+      }
     }
 
     this.connecting = new Promise((resolve, reject) => {
@@ -449,7 +471,29 @@ class TransactionDB {
     }
 
     if (this.db && this.isInitialized) {
-      return Promise.resolve();
+      // object store가 삭제된 경우 강제 재생성
+      if (!this.db.objectStoreNames.contains(this.storeName)) {
+        this.db.close();
+        this.isInitialized = false;
+        this.db = null;
+        // 버전 강제 증가
+        const newVersion = this.version + 1;
+        const request = indexedDB.open(this.dbName, newVersion);
+        request.onupgradeneeded = async (event: IDBVersionChangeEvent) => {
+          const db = (event.target as IDBOpenDBRequest).result;
+          if (!db.objectStoreNames.contains(this.storeName)) {
+            db.createObjectStore(this.storeName, { keyPath: 'id' });
+          }
+        };
+        await new Promise((resolve, reject) => {
+          request.onsuccess = () => resolve(undefined);
+          request.onerror = () => reject(request.error);
+        });
+        this.isInitialized = false;
+        this.db = null;
+      } else {
+        return Promise.resolve();
+      }
     }
 
     this.connecting = new Promise((resolve, reject) => {

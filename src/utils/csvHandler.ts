@@ -165,7 +165,7 @@ export const exportToCSV = (data: any[], filename: string, isCategory: boolean =
                   transformed[koreanHeader] = dateStr;
                 }
               } else {
-                transformed[koreanHeader] = value?.toString() || '';
+                transformed[koreanHeader] = (value !== undefined && value !== null) ? value.toString() : '';
               }
             }
           });
