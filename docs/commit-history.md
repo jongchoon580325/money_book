@@ -1,5 +1,23 @@
 # 커밋 히스토리
 
+### 2025-07-16
+
+25. **기능: 내보내기 모달 UX 및 안정성 개선, production build 반영** (01e2963)
+  - 내보내기(거래내역/카테고리) 실행 시 모달 확인창 추가로 UX 개선
+    - ConfirmModal 컴포넌트 활용, 확인 시에만 실제 내보내기 동작
+    - 내보내기 실패/성공 메시지 UX 일관화
+  - 카테고리/거래내역 내보내기 시 불필요 필드 제거 및 데이터 변환 안정성 강화
+    - order 등 undefined/null 값 안전 처리
+    - exportToCSV 변환 로직 보완
+  - 카테고리 가져오기 시 order 필드 누락 데이터도 정상 처리
+    - order가 없으면 0 자동 할당
+  - IndexedDB object store 자동 복구 로직 보강
+    - object store 누락 시 DB 버전업 및 재생성 자동화
+    - 브라우저 DB 꼬임 시에도 NotFoundError 없이 복구
+  - ESLint Flat config(최신)만 사용하도록 설정 일원화
+    - eslint.config.mjs 공식 권장 방식으로 정비
+  - production build 및 최신 코드 커밋/푸시 반영
+
 ### 2025-05-25
 
 24. **수정: 카테고리별 금액 그래프 y축 기타 항목명 항상 표시 및 컬러 일관화** (859f1d5)

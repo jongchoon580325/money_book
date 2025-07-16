@@ -12,6 +12,7 @@ import { Transaction } from '@/types/transaction';
 import PasswordModal from '@/components/settings/PasswordModal';
 import { useRouter } from 'next/navigation';
 import ConfirmModal from '@/components/common/ConfirmModal';
+import AccordionCategoryTabs from '@/components/settings/AccordionCategoryTabs';
 
 export default function SettingsPage() {
   const [toast, setToast] = useState({ show: false, message: '', type: '' });
@@ -229,7 +230,8 @@ export default function SettingsPage() {
           <div className="lg:w-2/3">
             <h2 className="text-3xl font-bold mb-6 text-white">카테고리 관리</h2>
             <div className="bg-gray-800 rounded-xl shadow-2xl p-6">
-              <CategoryTabs />
+              {/* 기존: <CategoryTabs /> → 신규: AccordionCategoryTabs */}
+              <AccordionCategoryTabs />
             </div>
           </div>
 
